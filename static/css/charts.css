@@ -1,0 +1,395 @@
+/* ═══════════════════════════════════════════════════
+   HabitOS — Monochrome Premium Charts CSS
+   ═══════════════════════════════════════════════════ */
+
+/* ── Glassmorphism chart card ─────────────────────── */
+.chart-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 20px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.25s ease;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+/* Top shimmer line */
+.chart-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.18) 40%,
+            rgba(255, 255, 255, 0.06) 100%);
+    pointer-events: none;
+}
+
+.chart-card:hover {
+    border-color: rgba(255, 255, 255, 0.13);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+    transform: translateY(-1px);
+}
+
+/* ── Chart header ─────────────────────────────────── */
+.chart-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.chart-header h3 {
+    font-size: 11px;
+    font-weight: 700;
+    color: #666666;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.chart-badge {
+    font-size: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #888888;
+    padding: 2px 9px;
+    border-radius: 100px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 600;
+}
+
+/* ── Stat cards ───────────────────────────────────── */
+.stat-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 16px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.stat-card::after {
+    content: '';
+    position: absolute;
+    bottom: -16px;
+    right: -16px;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.stat-card:hover {
+    border-color: rgba(255, 255, 255, 0.13);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    flex-shrink: 0;
+    color: #c0c0c0;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.stat-value {
+    font-size: 26px;
+    font-weight: 800;
+    font-family: 'Space Mono', monospace;
+    color: #f0f0f0;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #4a4a4a;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+/* ── Doughnut center label ────────────────────────── */
+.dsa-center-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    pointer-events: none;
+}
+
+.dsa-center-label span {
+    display: block;
+    font-size: 20px;
+    font-weight: 800;
+    font-family: 'Space Mono', monospace;
+    color: #e0e0e0;
+    line-height: 1;
+}
+
+.dsa-center-label small {
+    font-size: 9px;
+    color: #555;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+    display: block;
+}
+
+/* ── Difficulty legend ────────────────────────────── */
+.dsa-legend {
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.leg {
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'Space Mono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.leg::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Monochrome difficulty scale */
+.leg.easy {
+    color: #9a9a9a;
+}
+
+.leg.easy::before {
+    background: #9a9a9a;
+}
+
+.leg.med {
+    color: #c8c8c8;
+}
+
+.leg.med::before {
+    background: #c8c8c8;
+}
+
+.leg.hard {
+    color: #f0f0f0;
+}
+
+.leg.hard::before {
+    background: #f0f0f0;
+}
+
+/* ── Peak cards ───────────────────────────────────── */
+.peak-cards {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.peak-card {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 10px;
+    background: rgba(255, 255, 255, 0.025);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.peak-card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.peak-medal {
+    font-size: 14px;
+    flex-shrink: 0;
+}
+
+.peak-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    overflow: hidden;
+}
+
+.peak-label {
+    font-size: 10px;
+    color: #555;
+    font-family: 'Space Mono', monospace;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.peak-val {
+    font-size: 13px;
+    font-weight: 800;
+    font-family: 'Space Mono', monospace;
+    color: #d0d0d0;
+}
+
+/* ── Heatmap ──────────────────────────────────────── */
+.heatmap-svg-wrap {
+    overflow-x: auto;
+    padding-bottom: 4px;
+}
+
+.heatmap-svg-wrap::-webkit-scrollbar {
+    height: 3px;
+}
+
+.heatmap-svg-wrap::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.heatmap-legend {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+.hml-label {
+    font-size: 10px;
+    color: #444;
+}
+
+rect-block {
+    display: inline-block;
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+}
+
+/* ── Section dividers ─────────────────────────────── */
+.section-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 32px 16px;
+    color: #333;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.section-divider::before,
+.section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Shimmer loading ──────────────────────────────── */
+.chart-loading::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg,
+            transparent 0%,
+            rgba(255, 255, 255, 0.03) 50%,
+            transparent 100%);
+    animation: shimmer 1.8s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* ── Responsive ───────────────────────────────────── */
+@media (max-width: 768px) {
+    .chart-card {
+        padding: 14px;
+        border-radius: 14px;
+    }
+
+    .peak-cards {
+        flex-direction: column;
+    }
+
+    .stat-value {
+        font-size: 22px;
+    }
+}
+
+/* ═══════════════════════════════════════════════
+   CHART RENDERING FIX — canvas sizing
+   ═══════════════════════════════════════════════ */
+
+/* Ensure every canvas is block and fills its wrapper */
+canvas {
+    display: block !important;
+    width: 100% !important;
+}
+
+/* All chart wrapper divs must have explicit height and not collapse */
+[style*="height:"]>canvas,
+[style*="height: "]>canvas {
+    height: 100% !important;
+}
+
+/* Override any accidental overflow hidden that clips canvas */
+.chart-card {
+    overflow: visible;
+}
+
+.dash-chart-sm {
+    overflow: visible;
+}
+
+/* Ensure wrappers with inline height styles render correctly */
+.chart-card div[style*="height"] {
+    position: relative;
+    display: block;
+    min-height: 80px;
+}

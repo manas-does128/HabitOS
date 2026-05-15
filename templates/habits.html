@@ -1,0 +1,343 @@
+{% extends "base.html" %}
+{% block title %}Habits — HabitOS{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<style>
+    /* ── Weekday picker ─────────────────────────────── */
+    .day-picker {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 4px;
+    }
+
+    .day-btn {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        padding: 4px 10px;
+        border-radius: 100px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #4a4a4a;
+        transition: all 0.18s;
+        user-select: none;
+    }
+
+    .day-btn.selected {
+        background: rgba(255, 255, 255, 0.12);
+        border-color: rgba(255, 255, 255, 0.25);
+        color: #d0d0d0;
+    }
+
+    .day-btn:hover {
+        border-color: rgba(255, 255, 255, 0.15);
+        color: #888;
+    }
+
+    /* Hidden checkbox inputs for days */
+    .day-picker input[type=checkbox] {
+        display: none;
+    }
+
+    /* Days badge on habit card */
+    .habit-days-badge {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 3px;
+        margin-bottom: 8px;
+    }
+
+    .habit-day-chip {
+        font-size: 9px;
+        font-weight: 700;
+        color: #3a3a3a;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.06);
+        padding: 1px 6px;
+        border-radius: 100px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .habit-day-chip.today-chip {
+        color: #c0c0c0;
+        background: rgba(255, 255, 255, 0.09);
+        border-color: rgba(255, 255, 255, 0.18);
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Habit Tracker</h1>
+        <p class="page-subtitle">Build consistent routines, one day at a time</p>
+    </div>
+    <button class="btn-primary" onclick="showModal('addHabitModal')">+ New Habit</button>
+</div>
+
+<div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="stat-card">
+        <div class="stat-icon">◈</div>
+        <div class="stat-info">
+            <span class="stat-value">{{ habits|length }}</span>
+            <span class="stat-label">Active Habits</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">✓</div>
+        <div class="stat-info">
+            <span class="stat-value">{{ habits | selectattr('completed_today') | list | length }}</span>
+            <span class="stat-label">Done Today</span>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-info">
+            <span class="stat-value">{{ habits | map(attribute='streak') | max if habits else 0 }}</span>
+            <span class="stat-label">Best Streak</span>
+        </div>
+    </div>
+</div>
+
+
+
+{% if habits %}
+<div class="habits-grid">
+    {% for habit in habits %}
+    {% set habit_days = habit.get('days_of_week', DAYS) %}
+    <div class="habit-card {% if habit.completed_today %}habit-done{% endif %}" id="hcard-{{ habit._id }}">
+        <div class="habit-card-top">
+            <div class="habit-color-bar" style="background:{{ habit.color }}"></div>
+            <div class="habit-card-actions">
+                <button
+                    onclick="editHabit('{{ habit._id }}','{{ habit.name }}','{{ habit.category }}','{{ habit.description | default('') }}','{{ habit.color }}',{{ habit_days | tojson }})"
+                    class="icon-btn">✎</button>
+                <button onclick="deleteHabit('{{ habit._id }}')" class="icon-btn icon-btn-danger">✕</button>
+            </div>
+        </div>
+        <div class="habit-card-body">
+            <div class="habit-category-tag">{{ habit.category }}</div>
+            <h3 class="habit-card-name">{{ habit.name }}</h3>
+            <!-- Day chips -->
+            <div class="habit-days-badge">
+                {% for d in DAYS %}
+                {% if d in habit_days %}
+                <span class="habit-day-chip">{{ d[:2] }}</span>
+                {% endif %}
+                {% endfor %}
+            </div>
+            {% if habit.description %}
+            <p class="habit-card-desc">{{ habit.description }}</p>
+            {% endif %}
+            <div class="habit-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width:{{ habit.completion_rate }}%;background:{{ habit.color }}">
+                    </div>
+                </div>
+                <span class="progress-text">{{ habit.completion_rate }}%</span>
+            </div>
+            <div class="habit-card-footer">
+                <div class="habit-streak">
+                    <span>🔥</span>
+                    <span>{{ habit.streak }} day streak</span>
+                </div>
+                <label class="habit-cb-label" id="label-{{ habit._id }}">
+                    <input type="checkbox" class="habit-cb-input" id="cb-{{ habit._id }}" {% if habit.completed_today
+                        %}checked{% endif %} onchange="toggleHabit('{{ habit._id }}', this)">
+                    <span class="habit-cb-custom">
+                        <svg viewBox="0 0 24 24" class="cb-tick">
+                            <polyline points="4,12 9,17 20,6" />
+                        </svg>
+                        <span class="cb-ripple"></span>
+                    </span>
+                    <span class="cb-text">{% if habit.completed_today %}Done!{% else %}Mark Done{% endif %}</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-full">
+    <div class="empty-icon">◈</div>
+    <h3>No habits yet</h3>
+    <p>Start building your first routine</p>
+    <button class="btn-primary" onclick="showModal('addHabitModal')">Create Your First Habit</button>
+</div>
+{% endif %}
+
+<!-- ── Add Habit Modal ── -->
+<div class="modal-overlay" id="addHabitModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>New Habit</h3>
+            <button onclick="closeModal('addHabitModal')">×</button>
+        </div>
+        <form method="POST" action="{{ url_for('habits.add') }}">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" name="name" placeholder="e.g. Morning Run" required>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category">
+                    <option>Health</option>
+                    <option>Learning</option>
+                    <option>Fitness</option>
+                    <option>Mindfulness</option>
+                    <option>Coding</option>
+                    <option>Reading</option>
+                    <option>General</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Active Days <small>(tap to select — defaults to every day)</small></label>
+                <div class="day-picker" id="addDayPicker">
+                    {% for d in DAYS %}
+                    <label class="day-btn selected" id="addDay-{{ d }}">
+                        <input type="checkbox" name="days_of_week" value="{{ d }}" checked
+                            onchange="toggleDayBtn(this,'addDay-{{ d }}')">
+                        {{ d[:3] }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" placeholder="Optional details..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Color</label>
+                <input type="color" name="color" value="#888888">
+            </div>
+            <div class="modal-actions">
+                <button type="button" onclick="closeModal('addHabitModal')" class="btn-secondary">Cancel</button>
+                <button type="submit" class="btn-primary">Create Habit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ── Edit Habit Modal ── -->
+<div class="modal-overlay" id="editHabitModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Edit Habit</h3>
+            <button onclick="closeModal('editHabitModal')">×</button>
+        </div>
+        <form method="POST" id="editHabitForm">
+            <div class="form-group">
+                <label>Name *</label>
+                <input type="text" name="name" id="editName" required>
+            </div>
+            <div class="form-group">
+                <label>Category</label>
+                <select name="category" id="editCategory">
+                    <option>Health</option>
+                    <option>Learning</option>
+                    <option>Fitness</option>
+                    <option>Mindfulness</option>
+                    <option>Coding</option>
+                    <option>Reading</option>
+                    <option>General</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Active Days</label>
+                <div class="day-picker" id="editDayPicker">
+                    {% for d in DAYS %}
+                    <label class="day-btn" id="editDay-{{ d }}">
+                        <input type="checkbox" name="days_of_week" value="{{ d }}"
+                            onchange="toggleDayBtn(this,'editDay-{{ d }}')">
+                        {{ d[:3] }}
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea name="description" id="editDesc"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Color</label>
+                <input type="color" name="color" id="editColor">
+            </div>
+            <div class="modal-actions">
+                <button type="button" onclick="closeModal('editHabitModal')" class="btn-secondary">Cancel</button>
+                <button type="submit" class="btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const ALL_DAYS = {{ DAYS | tojson }};
+
+    function toggleDayBtn(cb, labelId) {
+        const lbl = document.getElementById(labelId);
+        if (lbl) lbl.classList.toggle('selected', cb.checked);
+    }
+
+    function toggleHabit(id, cb) {
+        fetch(`/habits/complete/${id}`, { method: 'POST' })
+            .then(r => r.json())
+            .then(data => {
+                const card = document.getElementById(`hcard-${id}`);
+                const label = document.getElementById(`label-${id}`);
+                const textEl = label.querySelector('.cb-text');
+                if (data.status === 'completed') {
+                    card.classList.add('habit-done');
+                    textEl.textContent = 'Done!';
+                    triggerRipple(label);
+                } else {
+                    card.classList.remove('habit-done');
+                    textEl.textContent = 'Mark Done';
+                    cb.checked = false;
+                }
+            });
+    }
+
+    function triggerRipple(label) {
+        const ripple = label.querySelector('.cb-ripple');
+        ripple.classList.remove('ripple-go');
+        void ripple.offsetWidth;
+        ripple.classList.add('ripple-go');
+    }
+
+    function editHabit(id, name, cat, desc, color, days) {
+        document.getElementById('editHabitForm').action = `/habits/edit/${id}`;
+        document.getElementById('editName').value = name;
+        document.getElementById('editDesc').value = desc;
+        document.getElementById('editColor').value = color;
+        const sel = document.getElementById('editCategory');
+        for (let o of sel.options) o.selected = (o.value === cat);
+
+        // Set day checkboxes
+        ALL_DAYS.forEach(d => {
+            const cb = document.querySelector(`#editDay-${d} input`);
+            const lbl = document.getElementById(`editDay-${d}`);
+            if (cb && lbl) {
+                const checked = days.includes(d);
+                cb.checked = checked;
+                lbl.classList.toggle('selected', checked);
+            }
+        });
+        showModal('editHabitModal');
+    }
+
+    function deleteHabit(id) {
+        if (!confirm('Delete this habit?')) return;
+        const f = document.createElement('form');
+        f.method = 'POST'; f.action = `/habits/delete/${id}`;
+        document.body.appendChild(f); f.submit();
+    }
+
+    function showModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    document.querySelectorAll('.modal-overlay').forEach(m =>
+        m.addEventListener('click', e => { if (e.target === m) m.classList.remove('active'); }));
+</script>
+{% endblock %}
