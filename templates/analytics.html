@@ -3,135 +3,146 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
 <style>
-    /* ════════════════════════════════════════════════
-   Analytics Page — Compact Monochrome Glass UI
-   ════════════════════════════════════════════════ */
+    /* ══════════════════════════════════════════════════
+   Analytics — Premium SaaS Redesign
+   Layout: Calendar LEFT · Daily Chart RIGHT
+   Weekly + Monthly below, full-width
+   ══════════════════════════════════════════════════ */
 
-    .analytics-wrap {
-        padding: 0 32px 32px;
+    /* Page wrapper */
+    .ana-wrap {
+        padding: 0 32px 36px;
     }
 
-    .section-label {
-        font-size: 10px;
-        font-weight: 700;
-        color: #3a3a3a;
+    /* ── Section label pill ──────────────────────────── */
+    .ana-section-hdr {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 10px;
+    }
+
+    .ana-section-pill {
+        font-size: 9px;
+        font-weight: 800;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        letter-spacing: 0.09em;
-        padding: 0 0 8px;
+        color: #3a3a3a;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 100px;
+        padding: 3px 10px;
     }
 
-    /* ══════════════════════════════════════════════
-   CHANGE 1 — COMPACT CALENDAR
-   Reduced from ~28px min-height cells to 22px,
-   tighter gaps, smaller text, thinner chrome.
-   ══════════════════════════════════════════════ */
-    .cal-glass {
+    .ana-section-line {
+        flex: 1;
+        height: 1px;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* ══════════════════════════════════════════════════
+   ROW 1 — Calendar (left) + Daily Chart (right)
+   ══════════════════════════════════════════════════ */
+    .daily-row {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 12px;
+        margin-bottom: 12px;
+        align-items: start;
+    }
+
+    /* ── Compact Calendar Card ───────────────────────── */
+    .cal-card {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(255, 255, 255, 0.07);
         border-radius: 14px;
-        padding: 10px 12px;
-        /* was 14px 16px */
-        backdrop-filter: blur(16px);
+        padding: 12px 12px 10px;
+        backdrop-filter: blur(20px);
         position: relative;
         overflow: hidden;
-        margin-bottom: 12px;
-        /* was 14px */
     }
 
-    .cal-glass::before {
+    .cal-card::before {
         content: '';
         position: absolute;
         top: 0;
         left: 0;
         right: 0;
         height: 1px;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.09), transparent);
+        background: linear-gradient(90deg,
+                transparent 0%, rgba(255, 255, 255, 0.12) 50%, transparent 100%);
     }
 
-    /* Nav row */
-    .cal-nav-row {
+    /* Month navigation */
+    .cal-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         margin-bottom: 8px;
-        /* was 10px */
     }
 
-    .cal-nav-left {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    .cal-month-tag {
+    .cal-month-label {
         font-size: 11px;
-        /* was 12px */
         font-weight: 700;
         font-family: 'Space Mono', monospace;
-        color: #b0b0b0;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 100px;
-        padding: 2px 10px;
-        /* was 3px 12px */
+        color: #c0c0c0;
+    }
+
+    .cal-nav-btns {
+        display: flex;
+        gap: 3px;
     }
 
     .cal-nav-btn {
-        width: 22px;
-        height: 22px;
-        /* was 24px */
-        border-radius: 5px;
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
         border: 1px solid rgba(255, 255, 255, 0.08);
         background: rgba(255, 255, 255, 0.04);
         color: #4a4a4a;
-        font-size: 12px;
+        font-size: 11px;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        transition: all 0.18s;
+        transition: background 0.15s, color 0.15s;
     }
 
     .cal-nav-btn:hover {
-        background: rgba(255, 255, 255, 0.08);
-        color: #c0c0c0;
+        background: rgba(255, 255, 255, 0.1);
+        color: #d0d0d0;
     }
 
-    /* Week pills */
-    .cal-week-row {
+    /* Week pills row */
+    .cal-weeks {
         display: flex;
-        gap: 4px;
-        /* was 5px */
-        margin-bottom: 8px;
-        /* was 10px */
+        gap: 3px;
+        margin-bottom: 7px;
         flex-wrap: wrap;
     }
 
-    .week-pill {
-        font-size: 9px;
-        /* was 10px */
+    .cal-week-btn {
+        font-size: 8px;
         font-weight: 700;
         font-family: 'Space Mono', monospace;
-        padding: 2px 8px;
-        /* was 3px 10px */
+        padding: 2px 6px;
         border-radius: 100px;
         border: 1px solid rgba(255, 255, 255, 0.06);
-        background: rgba(255, 255, 255, 0.03);
-        color: #333;
+        background: transparent;
+        color: #2e2e2e;
         cursor: pointer;
-        transition: all 0.18s;
+        transition: all 0.15s;
     }
 
-    .week-pill:hover {
-        color: #777;
+    .cal-week-btn:hover {
+        color: #666;
         border-color: rgba(255, 255, 255, 0.12);
-        background: rgba(255, 255, 255, 0.06);
     }
 
-    .week-pill.active {
+    .cal-week-btn.active {
         color: #c0c0c0;
-        border-color: rgba(255, 255, 255, 0.22);
-        background: rgba(255, 255, 255, 0.09);
+        border-color: rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.07);
     }
 
     /* Day-of-week header */
@@ -139,52 +150,45 @@
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         gap: 2px;
-        /* was 3px */
         margin-bottom: 2px;
-        /* was 3px */
     }
 
-    .cal-dow span {
+    .cal-dow-lbl {
         text-align: center;
-        font-size: 8px;
-        /* was 9px */
+        font-size: 7px;
         font-weight: 700;
-        color: #272727;
-        letter-spacing: 0.05em;
+        color: #252525;
+        letter-spacing: 0.04em;
         text-transform: uppercase;
-        padding: 1px 0;
     }
 
-    /* Date grid — COMPACT */
-    .cal-dates {
+    /* Date grid */
+    .cal-grid {
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         gap: 2px;
-        /* was 3px */
     }
 
     .cal-cell {
         aspect-ratio: 1;
-        min-height: 22px;
-        /* was 28px */
-        border-radius: 5px;
-        /* was 6px */
-        background: rgba(255, 255, 255, 0.03);
+        min-height: 0;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.025);
         border: 1px solid transparent;
         display: flex;
-        flex-direction: column;
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        transition: background 0.13s, border-color 0.13s, transform 0.13s;
+        transition: background 0.12s, border-color 0.12s, transform 0.12s, box-shadow 0.12s;
         user-select: none;
         position: relative;
     }
 
     .cal-cell:hover:not(.cal-future):not(.cal-blank) {
-        background: rgba(255, 255, 255, 0.08);
-        border-color: rgba(255, 255, 255, 0.12);
-        transform: scale(1.08);
+        background: rgba(255, 255, 255, 0.09);
+        border-color: rgba(255, 255, 255, 0.14);
+        transform: scale(1.1);
+        z-index: 1;
     }
 
     .cal-cell.cal-blank {
@@ -194,87 +198,68 @@
     }
 
     .cal-cell.cal-future {
-        opacity: 0.12;
+        opacity: 0.1;
         pointer-events: none;
     }
 
     .cal-cell.cal-today {
-        border-color: rgba(255, 255, 255, 0.26);
+        border-color: rgba(255, 255, 255, 0.28);
         background: rgba(255, 255, 255, 0.07);
     }
 
-    /* ── CHANGE 2 support: selected date styling ── */
     .cal-cell.cal-selected {
-        background: rgba(255, 255, 255, 0.14) !important;
-        border-color: rgba(255, 255, 255, 0.35) !important;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.08);
+        background: rgba(255, 255, 255, 0.18) !important;
+        border-color: rgba(255, 255, 255, 0.4) !important;
+        box-shadow: 0 0 8px rgba(255, 255, 255, 0.1);
     }
 
     .cal-cell.cal-selected .cal-dn {
-        color: #f0f0f0;
+        color: #f5f5f5;
     }
 
     .cal-dn {
-        font-size: 10px;
-        /* was 11px */
+        font-size: 9px;
         font-weight: 600;
-        color: #3a3a3a;
+        color: #383838;
         line-height: 1;
+        pointer-events: none;
     }
 
     .cal-cell.cal-today .cal-dn {
-        color: #b0b0b0;
+        color: #aaa;
     }
 
-    .cal-today-dot {
+    /* Today dot */
+    .cal-today-pip {
+        position: absolute;
+        bottom: 2px;
+        left: 50%;
+        transform: translateX(-50%);
         width: 2px;
         height: 2px;
-        /* was 3px */
         background: #666;
         border-radius: 50%;
-        margin-top: 1px;
     }
 
-    /* Legend — smaller */
-    .cal-legend {
-        display: flex;
-        align-items: center;
-        gap: 3px;
-        justify-content: flex-end;
-        margin-top: 6px;
-        /* was 8px */
-    }
-
-    .cal-leg-lbl {
-        font-size: 8px;
-        color: #252525;
-    }
-
-    .cal-leg-sq {
-        width: 8px;
-        height: 8px;
-        border-radius: 2px;
-        background: #888;
-    }
-
-    /* was 10px */
-
-    /* Day detail mini panel (inside calendar) */
-    .day-panel {
+    /* Mini stat row inside calendar */
+    .cal-mini-stats {
         margin-top: 8px;
-        /* was 10px */
-        background: rgba(255, 255, 255, 0.025);
-        border: 1px solid rgba(255, 255, 255, 0.07);
-        border-radius: 8px;
-        padding: 10px 12px;
-        /* was 12px 14px */
-        animation: panelIn 0.18s ease;
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        display: none;
+        animation: statsFade 0.2s ease;
     }
 
-    @keyframes panelIn {
+    .cal-mini-stats.visible {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 5px;
+    }
+
+    @keyframes statsFade {
         from {
             opacity: 0;
-            transform: translateY(-3px);
+            transform: translateY(-2px);
         }
 
         to {
@@ -283,479 +268,636 @@
         }
     }
 
-    .day-panel-hdr {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 8px;
-    }
-
-    .day-panel-hdr h4 {
-        font-size: 10px;
-        font-weight: 700;
-        font-family: 'Space Mono', monospace;
-        color: #555;
-    }
-
-    .day-panel-hdr button {
-        background: none;
-        border: none;
-        color: #2a2a2a;
-        cursor: pointer;
-        font-size: 14px;
-        line-height: 1;
-        transition: color 0.2s;
-    }
-
-    .day-panel-hdr button:hover {
-        color: #888;
-    }
-
-    .day-stats {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 6px;
-    }
-
-    .day-stat {
+    .cal-mini-stat {
         background: rgba(255, 255, 255, 0.03);
         border: 1px solid rgba(255, 255, 255, 0.05);
-        border-radius: 7px;
-        padding: 8px;
+        border-radius: 6px;
+        padding: 6px 4px;
         text-align: center;
     }
 
-    .day-stat span {
-        display: block;
-        font-size: 18px;
+    .cal-mini-stat .cms-val {
+        font-size: 15px;
         font-weight: 800;
         font-family: 'Space Mono', monospace;
         color: #d0d0d0;
-        line-height: 1.2;
+        line-height: 1;
+        display: block;
     }
 
-    .day-stat small {
-        font-size: 8px;
-        color: #333;
+    .cal-mini-stat .cms-lbl {
+        font-size: 7px;
+        color: #2e2e2e;
         text-transform: uppercase;
         letter-spacing: 0.06em;
         margin-top: 2px;
         display: block;
     }
 
-    /* ══════════════════════════════════════════════
-   CHANGE 2 — Daily Activity graph title badge
-   Shows the selected date dynamically
-   ══════════════════════════════════════════════ */
-    #dailyChartBadge {
-        transition: opacity 0.25s;
+    /* Selected date label */
+    .cal-selected-label {
+        font-size: 9px;
+        color: #444;
+        font-family: 'Space Mono', monospace;
+        margin-top: 6px;
+        min-height: 12px;
+        text-align: center;
     }
 
-    #dailyChartTitle {
-        transition: all 0.2s ease;
+    /* ── Daily Activity Chart (right panel) ──────────── */
+    .daily-chart-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 14px;
+        padding: 14px 16px;
+        backdrop-filter: blur(20px);
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.2s;
     }
 
-    /* Chart fade-update animation */
-    @keyframes chartFadeIn {
-        from {
-            opacity: 0.3;
+    .daily-chart-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg,
+                transparent 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    }
+
+    .daily-chart-card:hover {
+        border-color: rgba(255, 255, 255, 0.11);
+    }
+
+    .dcc-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+
+    .dcc-title-block {}
+
+    .dcc-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        transition: color 0.2s;
+    }
+
+    .dcc-subtitle {
+        font-size: 10px;
+        color: #2e2e2e;
+        font-family: 'Space Mono', monospace;
+        margin-top: 2px;
+        min-height: 14px;
+        transition: all 0.25s ease;
+    }
+
+    .dcc-badge {
+        font-size: 9px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.09);
+        color: #3a3a3a;
+        padding: 2px 8px;
+        border-radius: 100px;
+        font-family: 'Space Mono', monospace;
+        transition: all 0.2s;
+    }
+
+    .dcc-badge.active {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #aaa;
+    }
+
+    /* Chart canvas wrapper inside daily card */
+    .dcc-canvas-wrap {
+        height: 120px;
+        position: relative;
+        transition: opacity 0.3s ease;
+    }
+
+    .dcc-canvas-wrap.fading {
+        opacity: 0.3;
+    }
+
+    /* ══════════════════════════════════════════════════
+   ROW 2 — Weekly + Monthly side by side
+   ══════════════════════════════════════════════════ */
+    .two-col-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-bottom: 0;
+    }
+
+    /* Shared chart card for weekly/monthly */
+    .ana-chart-card {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 14px;
+        padding: 14px 16px;
+        backdrop-filter: blur(20px);
+        position: relative;
+        overflow: hidden;
+        transition: border-color 0.2s, transform 0.2s;
+    }
+
+    .ana-chart-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    }
+
+    .ana-chart-card:hover {
+        border-color: rgba(255, 255, 255, 0.11);
+        transform: translateY(-1px);
+    }
+
+    .acc-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+    }
+
+    .acc-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+    }
+
+    .acc-badge {
+        font-size: 9px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: #333;
+        padding: 2px 8px;
+        border-radius: 100px;
+        font-family: 'Space Mono', monospace;
+    }
+
+    .acc-canvas-wrap {
+        height: 100px;
+    }
+
+    /* ── Chart fade-in animation on update ───────────── */
+    @keyframes chartPop {
+        0% {
+            opacity: 0.2;
+            transform: scaleY(0.97);
         }
 
-        to {
+        100% {
             opacity: 1;
+            transform: scaleY(1);
         }
     }
 
-    .chart-updating canvas {
-        animation: chartFadeIn 0.35s ease forwards;
+    .chart-pop {
+        animation: chartPop 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     }
 
-    /* Responsive */
+    /* ── Responsive ──────────────────────────────────── */
+    @media (max-width: 1024px) {
+        .daily-row {
+            grid-template-columns: 180px 1fr;
+        }
+    }
+
     @media (max-width: 768px) {
-        .analytics-wrap {
+        .ana-wrap {
             padding: 0 16px 24px;
         }
 
-        .cal-dates {
-            gap: 2px;
+        .daily-row {
+            grid-template-columns: 1fr;
         }
 
-        .cal-cell {
-            min-height: 20px;
+        .two-col-row {
+            grid-template-columns: 1fr;
         }
 
-        .cal-dn {
-            font-size: 9px;
-        }
-
-        .day-stats {
-            gap: 5px;
+        .cal-card {
+            max-width: 100%;
         }
     }
 </style>
 {% endblock %}
+
 {% block content %}
 
 <div class="page-header">
     <div>
         <h1 class="page-title">Analytics</h1>
-        <p class="page-subtitle">Activity insights across all your habits and tasks</p>
+        <p class="page-subtitle">Activity insights across habits, tasks &amp; productivity</p>
     </div>
 </div>
 
-<!-- Summary stats -->
+<!-- ── Summary stat cards ── -->
 <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
     <div class="stat-card">
         <div class="stat-icon">◈</div>
-        <div class="stat-info"><span class="stat-value">{{ stats.total_habits }}</span><span class="stat-label">Active
-                Habits</span></div>
+        <div class="stat-info">
+            <span class="stat-value">{{ stats.total_habits }}</span>
+            <span class="stat-label">Active Habits</span>
+        </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon">✓</div>
-        <div class="stat-info"><span class="stat-value">{{ stats.completed_this_week }}</span><span
-                class="stat-label">This Week</span></div>
+        <div class="stat-info">
+            <span class="stat-value">{{ stats.completed_this_week }}</span>
+            <span class="stat-label">This Week</span>
+        </div>
     </div>
     <div class="stat-card">
         <div class="stat-icon">▦</div>
-        <div class="stat-info"><span class="stat-value">{{ stats.tasks_done }}</span><span class="stat-label">Tasks
-                Done</span></div>
+        <div class="stat-info">
+            <span class="stat-value">{{ stats.tasks_done }}</span>
+            <span class="stat-label">Tasks Done</span>
+        </div>
     </div>
 </div>
 
-<div class="analytics-wrap">
+<div class="ana-wrap">
 
-    <!-- ── DAILY: Compact Calendar ── -->
-    <div class="section-label">Daily Activity</div>
-    <div class="cal-glass">
-        <div class="cal-nav-row">
-            <div class="cal-nav-left">
-                <button class="cal-nav-btn" onclick="calPrev()">‹</button>
-                <span id="calLabel" class="cal-month-tag"></span>
-                <button class="cal-nav-btn" onclick="calNext()">›</button>
+    <!-- ══ ROW 1: Section label ══ -->
+    <div class="ana-section-hdr">
+        <span class="ana-section-pill">Daily Activity</span>
+        <div class="ana-section-line"></div>
+    </div>
+
+    <!-- ══ ROW 1: Calendar + Daily Chart side-by-side ══ -->
+    <div class="daily-row">
+
+        <!-- ── Compact Calendar ── -->
+        <div class="cal-card">
+            <div class="cal-header">
+                <span class="cal-month-label" id="calLabel"></span>
+                <div class="cal-nav-btns">
+                    <button class="cal-nav-btn" onclick="calPrev()" title="Previous month">‹</button>
+                    <button class="cal-nav-btn" onclick="calNext()" title="Next month">›</button>
+                </div>
+            </div>
+
+            <!-- Week pills -->
+            <div class="cal-weeks" id="calWeeks"></div>
+
+            <!-- Day-of-week labels -->
+            <div class="cal-dow">
+                <span class="cal-dow-lbl">Su</span>
+                <span class="cal-dow-lbl">Mo</span>
+                <span class="cal-dow-lbl">Tu</span>
+                <span class="cal-dow-lbl">We</span>
+                <span class="cal-dow-lbl">Th</span>
+                <span class="cal-dow-lbl">Fr</span>
+                <span class="cal-dow-lbl">Sa</span>
+            </div>
+
+            <!-- Date cells -->
+            <div class="cal-grid" id="calGrid"></div>
+
+            <!-- Selected date label -->
+            <div class="cal-selected-label" id="calSelectedLabel"></div>
+
+            <!-- Mini stats (shown after date click) -->
+            <div class="cal-mini-stats" id="calMiniStats">
+                <div class="cal-mini-stat"><span class="cms-val" id="cms-h">–</span><span class="cms-lbl">Habits</span>
+                </div>
+                <div class="cal-mini-stat"><span class="cms-val" id="cms-t">–</span><span class="cms-lbl">Tasks</span>
+                </div>
+                <div class="cal-mini-stat"><span class="cms-val" id="cms-d">–</span><span class="cms-lbl">DSA</span>
+                </div>
             </div>
         </div>
 
-        <!-- Week pills -->
-        <div class="cal-week-row" id="weekPills"></div>
-
-        <!-- DOW headers -->
-        <div class="cal-dow">
-            <span>Su</span><span>Mo</span><span>Tu</span>
-            <span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-        </div>
-
-        <!-- Date grid -->
-        <div class="cal-dates" id="calDates"></div>
-
-        <!-- Legend -->
-        <div class="cal-legend">
-            <span class="cal-leg-lbl">Less</span>
-            <div class="cal-leg-sq" style="opacity:.1"></div>
-            <div class="cal-leg-sq" style="opacity:.3"></div>
-            <div class="cal-leg-sq" style="opacity:.6"></div>
-            <div class="cal-leg-sq"></div>
-            <span class="cal-leg-lbl">More</span>
-        </div>
-
-        <!-- Mini stat panel inside calendar -->
-        <div id="dayPanel" class="day-panel" style="display:none">
-            <div class="day-panel-hdr">
-                <h4 id="panelTitle">–</h4>
-                <button onclick="document.getElementById('dayPanel').style.display='none'">×</button>
+        <!-- ── Daily Activity Chart ── -->
+        <div class="daily-chart-card" id="dailyChartCard">
+            <div class="dcc-header">
+                <div class="dcc-title-block">
+                    <div class="dcc-title" id="dccTitle">Daily Activity</div>
+                    <div class="dcc-subtitle" id="dccSubtitle">30-day overview · click a date to drill in</div>
+                </div>
+                <span class="dcc-badge" id="dccBadge">30d</span>
             </div>
-            <div id="panelBody"></div>
+            <div class="dcc-canvas-wrap" id="dccCanvasWrap">
+                <canvas id="dailyChart"></canvas>
+            </div>
         </div>
     </div>
 
-    <!-- ── DAILY graph — title updates on date click ── -->
-    <div class="chart-card" style="margin-bottom:14px" id="dailyChartCard">
-        <div class="chart-header">
-            <h3 id="dailyChartTitle">Daily Activity</h3>
-            <span class="chart-badge" id="dailyChartBadge">30d</span>
-        </div>
-        <div style="height:110px"><canvas id="dailyChart"></canvas></div>
+    <!-- ══ ROW 2: Section label ══ -->
+    <div class="ana-section-hdr" style="margin-top:8px">
+        <span class="ana-section-pill">Weekly &amp; Monthly</span>
+        <div class="ana-section-line"></div>
     </div>
 
-    <!-- ── WEEKLY graph — UNCHANGED ── -->
-    <div class="section-label" style="margin-top:4px">Weekly Activity</div>
-    <div class="chart-card" style="margin-bottom:14px">
-        <div class="chart-header">
-            <h3>Weekly Breakdown</h3>
-            <span class="chart-badge">7d</span>
+    <!-- ══ ROW 2: Weekly + Monthly ══ -->
+    <div class="two-col-row">
+        <div class="ana-chart-card">
+            <div class="acc-header">
+                <span class="acc-title">Weekly Breakdown</span>
+                <span class="acc-badge">7d</span>
+            </div>
+            <div class="acc-canvas-wrap">
+                <canvas id="weeklyChart"></canvas>
+            </div>
         </div>
-        <div style="height:110px"><canvas id="weeklyChart"></canvas></div>
+
+        <div class="ana-chart-card">
+            <div class="acc-header">
+                <span class="acc-title">Monthly Productivity</span>
+                <span class="acc-badge">30d</span>
+            </div>
+            <div class="acc-canvas-wrap">
+                <canvas id="monthlyChart"></canvas>
+            </div>
+        </div>
     </div>
 
-    <!-- ── MONTHLY graph — UNCHANGED ── -->
-    <div class="section-label">Monthly Activity</div>
-    <div class="chart-card">
-        <div class="chart-header">
-            <h3>Monthly Productivity</h3>
-            <span class="chart-badge">30d</span>
-        </div>
-        <div style="height:110px"><canvas id="monthlyChart"></canvas></div>
-    </div>
-
-</div>
+</div><!-- /ana-wrap -->
 
 <script>
+    /* ══════════════════════════════════════════════════
+       Data from Flask (unchanged)
+       ══════════════════════════════════════════════════ */
     const monthlyLabels = {{ monthly_labels | tojson }};
     const monthlyData = {{ monthly_data   | tojson }};
     const weeklyLabels = {{ habit_chart.labels | tojson }};
     const weeklyData = {{ habit_chart.data   | tojson }};
 
-    // ── Chart instances ───────────────────────────────
+    /* ── Chart instances ──────────────────────────────── */
     let dailyChartInst = null;
     let weeklyChartInst = null;
     let monthlyChartInst = null;
 
+    /* ── Calendar state ───────────────────────────────── */
+    let calY = new Date().getFullYear();
+    let calM = new Date().getMonth();
+    let activeWeek = null;
+    let selectedDate = null;
+
+    const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
+
+    /* ══════════════════════════════════════════════════
+       INIT
+       ══════════════════════════════════════════════════ */
     document.addEventListener('DOMContentLoaded', function () {
-        // Daily — starts showing 30-day overview
+
+        /* Daily — 30-day overview, smooth area line */
         dailyChartInst = HC.makeAreaChart('dailyChart', monthlyLabels,
-            [{ data: monthlyData, color: '#c0c0c0', label: 'Habits' }],
-            { legend: { display: false }, xAxis: { ticks: { maxTicksLimit: 8 } }, yAxis: { ticks: { stepSize: 1 } } }
-        );
-
-        // Weekly — unchanged, never touched by date clicks
-        weeklyChartInst = HC.makeAreaChart('weeklyChart', weeklyLabels,
-            [{ data: weeklyData, color: '#c0c0c0', label: 'Habits' }],
-            { legend: { display: false }, yAxis: { ticks: { stepSize: 1 } } }
-        );
-
-        // Monthly — unchanged, never touched by date clicks
-        monthlyChartInst = HC.makeAreaChart('monthlyChart', monthlyLabels,
             [{ data: monthlyData, color: '#c0c0c0', label: 'Activity' }],
-            { legend: { display: false }, xAxis: { ticks: { maxTicksLimit: 8 } }, yAxis: { ticks: { stepSize: 1 } } }
+            {
+                legend: { display: false },
+                xAxis: { ticks: { maxTicksLimit: 8, font: { size: 9 } } },
+                yAxis: { ticks: { stepSize: 1, font: { size: 9 } } }
+            }
+        );
+
+        /* Weekly — unchanged */
+        weeklyChartInst = HC.makeAreaChart('weeklyChart', weeklyLabels,
+            [{ data: weeklyData, color: '#b0b0b0', label: 'Habits' }],
+            {
+                legend: { display: false },
+                yAxis: { ticks: { stepSize: 1, font: { size: 9 } } },
+                xAxis: { ticks: { font: { size: 9 } } }
+            }
+        );
+
+        /* Monthly — unchanged */
+        monthlyChartInst = HC.makeAreaChart('monthlyChart', monthlyLabels,
+            [{ data: monthlyData, color: '#b0b0b0', label: 'Activity' }],
+            {
+                legend: { display: false },
+                xAxis: { ticks: { maxTicksLimit: 8, font: { size: 9 } } },
+                yAxis: { ticks: { stepSize: 1, font: { size: 9 } } }
+            }
         );
 
         renderCal();
     });
 
-    // ═══════════════════════════════════════════════════
-    // CHANGE 2 — Update Daily Activity chart on date click
-    // ═══════════════════════════════════════════════════
-    function updateDailyChart(dateStr, label, singleDayData) {
-        if (!dailyChartInst) return;
-        const card = document.getElementById('dailyChartCard');
-
-        // Fade animation
-        card.classList.add('chart-updating');
-        setTimeout(() => card.classList.remove('chart-updating'), 400);
-
-        // Update chart data
-        dailyChartInst.data.labels = [label];
-        dailyChartInst.data.datasets[0].data = [singleDayData];
-        dailyChartInst.update('active');
-
-        // Update header title + badge
-        document.getElementById('dailyChartTitle').textContent = label;
-        document.getElementById('dailyChartBadge').textContent = dateStr;
-    }
-
-    function resetDailyChart() {
-        if (!dailyChartInst) return;
-        dailyChartInst.data.labels = monthlyLabels;
-        dailyChartInst.data.datasets[0].data = monthlyData;
-        dailyChartInst.update('active');
-        document.getElementById('dailyChartTitle').textContent = 'Daily Activity';
-        document.getElementById('dailyChartBadge').textContent = '30d';
-    }
-
-    // ── Calendar ──────────────────────────────────────
-    let calY = new Date().getFullYear();
-    let calM = new Date().getMonth();
-    let activeWeek = null;
-
-    const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
-        'July', 'August', 'September', 'October', 'November', 'December'];
-
+    /* ══════════════════════════════════════════════════
+       CALENDAR RENDER
+       ══════════════════════════════════════════════════ */
     function renderCal() {
         const today = new Date();
         const firstDow = new Date(calY, calM, 1).getDay();
         const daysInMon = new Date(calY, calM + 1, 0).getDate();
         const totalWeeks = Math.ceil((daysInMon + firstDow) / 7);
 
+        /* Month label */
         document.getElementById('calLabel').textContent =
             MONTH_NAMES[calM].slice(0, 3) + ' ' + calY;
 
-        // Week pills
-        let pills = '';
+        /* Week pills */
+        let pillsHtml = '';
         for (let w = 1; w <= totalWeeks; w++) {
-            pills += `<button class="week-pill ${activeWeek === w ? 'active' : ''}"
-                          onclick="selectWeek(${w})">W${w}</button>`;
+            pillsHtml += `<button class="cal-week-btn ${activeWeek === w ? 'active' : ''}"
+            onclick="selectWeek(${w})">W${w}</button>`;
         }
-        document.getElementById('weekPills').innerHTML = pills;
+        document.getElementById('calWeeks').innerHTML = pillsHtml;
 
-        // Date cells
-        let html = '';
+        /* Date cells */
+        let gridHtml = '';
         for (let i = 0; i < firstDow; i++)
-            html += '<div class="cal-cell cal-blank"></div>';
+            gridHtml += '<div class="cal-cell cal-blank"></div>';
 
         for (let d = 1; d <= daysInMon; d++) {
             const dt = new Date(calY, calM, d);
-            const future = dt > today;
+            const isFuture = dt > today;
             const isToday = dt.toDateString() === today.toDateString();
             const ds = `${calY}-${String(calM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             const wn = Math.ceil((d + firstDow) / 7);
+            const isSel = ds === selectedDate;
 
-            html += `<div class="cal-cell ${future ? 'cal-future' : ''} ${isToday ? 'cal-today' : ''}"
-                      data-date="${ds}" data-week="${wn}"
-                      onclick="${future ? '' : 'pickDay(this)'}"
-                      title="${ds}">
+            gridHtml += `<div
+            class="cal-cell ${isFuture ? 'cal-future' : ''} ${isToday ? 'cal-today' : ''} ${isSel ? 'cal-selected' : ''}"
+            data-date="${ds}" data-week="${wn}"
+            onclick="${isFuture ? '' : 'pickDay(this)'}"
+            title="${ds}">
             <span class="cal-dn">${d}</span>
-            ${isToday ? '<span class="cal-today-dot"></span>' : ''}
+            ${isToday ? '<span class="cal-today-pip"></span>' : ''}
         </div>`;
         }
-        document.getElementById('calDates').innerHTML = html;
+        document.getElementById('calGrid').innerHTML = gridHtml;
     }
 
-    function calPrev() {
-        calM--; if (calM < 0) { calM = 11; calY--; }
-        activeWeek = null;
-        renderCal();
-        document.getElementById('dayPanel').style.display = 'none';
-        resetDailyChart();
-    }
-
-    function calNext() {
-        const t = new Date();
-        if (calY === t.getFullYear() && calM >= t.getMonth()) return;
-        calM++; if (calM > 11) { calM = 0; calY++; }
-        activeWeek = null;
-        renderCal();
-        document.getElementById('dayPanel').style.display = 'none';
-        resetDailyChart();
-    }
-
+    /* ══════════════════════════════════════════════════
+       DATE CLICK → update Daily chart only
+       ══════════════════════════════════════════════════ */
     function pickDay(cell) {
-        // Deselect any previous
-        document.querySelectorAll('.cal-cell.cal-selected').forEach(c => c.classList.remove('cal-selected'));
+        const dateStr = cell.dataset.date;
+        selectedDate = dateStr;
         activeWeek = null;
         renderCal();
-        cell.classList.add('cal-selected');
 
-        const dateStr = cell.dataset.date;
-
-        // ── Fetch day data → update mini panel + daily chart ──
-        loadDayPanel(dateStr);
-    }
-
-    function selectWeek(w) {
-        activeWeek = (activeWeek === w) ? null : w;
-        document.querySelectorAll('.cal-cell.cal-selected').forEach(c => c.classList.remove('cal-selected'));
-        renderCal();
-        if (activeWeek) loadWeekPanel(w);
-        else {
-            document.getElementById('dayPanel').style.display = 'none';
-            resetDailyChart();
-        }
-    }
-
-    function loadDayPanel(dateStr) {
-        const panel = document.getElementById('dayPanel');
-        const title = document.getElementById('panelTitle');
-        const body = document.getElementById('panelBody');
-
-        // Show panel with loading state
-        title.textContent = dateStr;
-        panel.style.display = 'block';
-        body.innerHTML = '<div style="color:#2e2e2e;font-size:11px">Loading…</div>';
-
-        // Human-readable label e.g. "May 17"
+        /* Human-readable: "May 17, 2026" */
         const [y, mo, da] = dateStr.split('-');
-        const humanLabel = MONTH_NAMES[parseInt(mo) - 1].slice(0, 3) + ' ' + parseInt(da);
+        const humanLabel = MONTH_NAMES[parseInt(mo) - 1] + ' ' + parseInt(da) + ', ' + y;
 
+        /* Show selected label in calendar */
+        document.getElementById('calSelectedLabel').textContent = humanLabel;
+
+        /* Update dcc header immediately */
+        document.getElementById('dccTitle').textContent = 'Activity for ' + humanLabel;
+        document.getElementById('dccSubtitle').textContent = 'Loading…';
+        const badge = document.getElementById('dccBadge');
+        badge.textContent = dateStr.slice(5); // e.g. "05-17"
+        badge.classList.add('active');
+
+        /* Fetch from existing /analytics/day endpoint */
         fetch(`/analytics/day?date=${dateStr}`)
             .then(r => r.json())
             .then(data => {
                 const h = data.habits_completed || 0;
                 const t = data.tasks_done || 0;
                 const d = data.dsa_solved || 0;
+
+                /* Update mini stats inside calendar */
+                document.getElementById('cms-h').textContent = h;
+                document.getElementById('cms-t').textContent = t;
+                document.getElementById('cms-d').textContent = d;
+                document.getElementById('calMiniStats').classList.add('visible');
+
+                /* Update dcc subtitle */
                 const total = h + t + d;
+                document.getElementById('dccSubtitle').textContent =
+                    total === 0 ? 'No activity recorded' :
+                        `${h} habit${h !== 1 ? 's' : ''} · ${t} task${t !== 1 ? 's' : ''} · ${d} DSA`;
 
-                // Update mini panel
-                body.innerHTML = `
-            <div class="day-stats">
-                <div class="day-stat"><span>${h}</span><small>Habits</small></div>
-                <div class="day-stat"><span>${t}</span><small>Tasks</small></div>
-                <div class="day-stat"><span>${d}</span><small>DSA</small></div>
-            </div>
-            ${total === 0 ? '<p style="color:#2a2a2a;font-size:10px;margin-top:6px;text-align:center">No activity recorded</p>' : ''}`;
-
-                // ── CHANGE 2: Update Daily Activity graph for this date ──
-                // Show 3 bars/points: Habits, Tasks, DSA for the clicked day
-                updateDailyChart(dateStr, humanLabel, total);
-
-                // Use multi-bar breakdown so the chart is meaningful for a single day
+                /* ── Update ONLY the Daily chart ── */
                 if (dailyChartInst) {
-                    dailyChartInst.data.labels = ['Habits', 'Tasks', 'DSA'];
-                    dailyChartInst.data.datasets[0].data = [h, t, d];
-                    dailyChartInst.update('active');
-                    document.getElementById('dailyChartTitle').textContent = humanLabel;
-                    document.getElementById('dailyChartBadge').textContent = dateStr;
-
-                    // Fade animation
-                    const card = document.getElementById('dailyChartCard');
-                    card.classList.add('chart-updating');
-                    setTimeout(() => card.classList.remove('chart-updating'), 400);
+                    const wrap = document.getElementById('dccCanvasWrap');
+                    wrap.classList.add('fading');
+                    setTimeout(() => {
+                        dailyChartInst.data.labels = ['Habits', 'Tasks', 'DSA'];
+                        dailyChartInst.data.datasets[0].data = [h, t, d];
+                        dailyChartInst.update('active');
+                        wrap.classList.remove('fading');
+                        wrap.classList.add('chart-pop');
+                        setTimeout(() => wrap.classList.remove('chart-pop'), 400);
+                    }, 200);
                 }
             })
             .catch(() => {
-                body.innerHTML = '<p style="color:#2a2a2a;font-size:10px">Could not load data.</p>';
+                document.getElementById('dccSubtitle').textContent = 'Could not load data';
             });
     }
 
-    function loadWeekPanel(weekNum) {
-        const panel = document.getElementById('dayPanel');
-        const title = document.getElementById('panelTitle');
-        const body = document.getElementById('panelBody');
-
-        title.textContent = `Week ${weekNum} · ${MONTH_NAMES[calM].slice(0, 3)} ${calY}`;
-        panel.style.display = 'block';
-        body.innerHTML = '<div style="color:#2e2e2e;font-size:11px">Loading week…</div>';
+    /* ══════════════════════════════════════════════════
+       WEEK CLICK → show week totals in daily chart
+       ══════════════════════════════════════════════════ */
+    function selectWeek(w) {
+        if (activeWeek === w) {
+            /* Deselect → reset to 30d view */
+            activeWeek = null;
+            selectedDate = null;
+            renderCal();
+            resetDailyChart();
+            document.getElementById('calMiniStats').classList.remove('visible');
+            document.getElementById('calSelectedLabel').textContent = '';
+            return;
+        }
+        activeWeek = w;
+        selectedDate = null;
+        renderCal();
 
         const firstDow = new Date(calY, calM, 1).getDay();
         const daysInMon = new Date(calY, calM + 1, 0).getDate();
-        const startD = (weekNum - 1) * 7 - firstDow + 1;
+        const startD = (w - 1) * 7 - firstDow + 1;
         const fetches = [];
-        const dayLabels = [];
+        const dayNums = [];
 
         for (let d = startD; d <= startD + 6; d++) {
             if (d < 1 || d > daysInMon) continue;
             const ds = `${calY}-${String(calM + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-            dayLabels.push(String(d));
+            dayNums.push(String(d));
             fetches.push(fetch(`/analytics/day?date=${ds}`).then(r => r.json()).catch(() => null));
         }
+
+        const weekLabel = `Week ${w} · ${MONTH_NAMES[calM].slice(0, 3)} ${calY}`;
+        document.getElementById('dccTitle').textContent = weekLabel;
+        document.getElementById('dccSubtitle').textContent = 'Loading week…';
+        document.getElementById('dccBadge').textContent = `W${w}`;
+        document.getElementById('dccBadge').classList.add('active');
+        document.getElementById('calSelectedLabel').textContent = weekLabel;
 
         Promise.all(fetches).then(results => {
             const valid = results.filter(Boolean);
             const tot = valid.reduce((a, r) => ({
-                habits: a.habits + (r.habits_completed || 0),
-                tasks: a.tasks + (r.tasks_done || 0),
-                dsa: a.dsa + (r.dsa_solved || 0),
-            }), { habits: 0, tasks: 0, dsa: 0 });
+                h: a.h + (r.habits_completed || 0),
+                t: a.t + (r.tasks_done || 0),
+                d: a.d + (r.dsa_solved || 0),
+            }), { h: 0, t: 0, d: 0 });
 
-            body.innerHTML = `
-            <div class="day-stats">
-                <div class="day-stat"><span>${tot.habits}</span><small>Habits</small></div>
-                <div class="day-stat"><span>${tot.tasks}</span><small>Tasks</small></div>
-                <div class="day-stat"><span>${tot.dsa}</span><small>DSA</small></div>
-            </div>`;
+            document.getElementById('cms-h').textContent = tot.h;
+            document.getElementById('cms-t').textContent = tot.t;
+            document.getElementById('cms-d').textContent = tot.d;
+            document.getElementById('calMiniStats').classList.add('visible');
+            document.getElementById('dccSubtitle').textContent =
+                `${tot.h} habits · ${tot.t} tasks · ${tot.d} DSA`;
 
-            // Update daily chart to show this week day-by-day
             if (dailyChartInst) {
-                const weekData = valid.map(r => (r.habits_completed || 0) + (r.tasks_done || 0) + (r.dsa_solved || 0));
-                dailyChartInst.data.labels = dayLabels;
-                dailyChartInst.data.datasets[0].data = weekData;
-                dailyChartInst.update('active');
-                document.getElementById('dailyChartTitle').textContent = `Week ${weekNum} Activity`;
-                document.getElementById('dailyChartBadge').textContent = MONTH_NAMES[calM].slice(0, 3);
-
-                const card = document.getElementById('dailyChartCard');
-                card.classList.add('chart-updating');
-                setTimeout(() => card.classList.remove('chart-updating'), 400);
+                const weekData = valid.map(r =>
+                    (r.habits_completed || 0) + (r.tasks_done || 0) + (r.dsa_solved || 0));
+                const wrap = document.getElementById('dccCanvasWrap');
+                wrap.classList.add('fading');
+                setTimeout(() => {
+                    dailyChartInst.data.labels = dayNums;
+                    dailyChartInst.data.datasets[0].data = weekData;
+                    dailyChartInst.update('active');
+                    wrap.classList.remove('fading');
+                    wrap.classList.add('chart-pop');
+                    setTimeout(() => wrap.classList.remove('chart-pop'), 400);
+                }, 200);
             }
         });
+    }
+
+    /* ── Reset daily chart to 30-day overview ────────── */
+    function resetDailyChart() {
+        if (!dailyChartInst) return;
+        dailyChartInst.data.labels = monthlyLabels;
+        dailyChartInst.data.datasets[0].data = monthlyData;
+        dailyChartInst.update('active');
+        document.getElementById('dccTitle').textContent = 'Daily Activity';
+        document.getElementById('dccSubtitle').textContent = '30-day overview · click a date to drill in';
+        document.getElementById('dccBadge').textContent = '30d';
+        document.getElementById('dccBadge').classList.remove('active');
+    }
+
+    /* ── Month navigation ────────────────────────────── */
+    function calPrev() {
+        calM--; if (calM < 0) { calM = 11; calY--; }
+        activeWeek = null; selectedDate = null;
+        renderCal();
+        resetDailyChart();
+        document.getElementById('calMiniStats').classList.remove('visible');
+        document.getElementById('calSelectedLabel').textContent = '';
+    }
+
+    function calNext() {
+        const t = new Date();
+        if (calY === t.getFullYear() && calM >= t.getMonth()) return;
+        calM++; if (calM > 11) { calM = 0; calY++; }
+        activeWeek = null; selectedDate = null;
+        renderCal();
+        resetDailyChart();
+        document.getElementById('calMiniStats').classList.remove('visible');
+        document.getElementById('calSelectedLabel').textContent = '';
     }
 </script>
 {% endblock %}
