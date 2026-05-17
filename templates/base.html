@@ -132,6 +132,21 @@
             navigator.serviceWorker.register('/static/sw.js');
         }
     </script>
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+
+    <script>
+        window.OneSignalDeferred = window.OneSignalDeferred || [];
+
+        OneSignalDeferred.push(async function (OneSignal) {
+            await OneSignal.init({
+                appId: "3dda4c4e-70f4-4d1b-9388-92d05c8f488b",
+                notifyButton: {
+                    enable: true,
+                },
+                allowLocalhostAsSecureOrigin: true
+            });
+        });
+    </script>
 </body>
 
 </html>
