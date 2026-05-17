@@ -1,5 +1,23 @@
-self.addEventListener('install', () => {
-    console.log('Service Worker Installed');
+const CACHE_NAME = "habitos-cache-v1";
+
+const urlsToCache = [
+    "/",
+    "/static/css/style.css",
+    "/static/js/dashboard.js"
+];
+
+self.addEventListener("install", event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME)
+            .then(cache => cache.addAll(urlsToCache))
+    );
 });
 
-self.addEventListener('fetch', (event) => { });
+self.addEventListener("fetch", event => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => {
+                return response || fetch(event.request);
+            })
+    );
+});
