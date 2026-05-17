@@ -1,0 +1,22 @@
+<div class="kanban-card priority-{{ task.priority }}"
+     draggable="true"
+     id="task-{{ task._id }}"
+     ondragstart="drag(event, '{{ task._id }}')"
+     data-id="{{ task._id }}">
+    <div class="card-priority-bar"></div>
+    <div class="card-body">
+        <div class="card-top">
+            <span class="card-priority-badge priority-badge-{{ task.priority }}">{{ task.priority }}</span>
+            <button onclick="deleteTask('{{ task._id }}')" class="icon-btn icon-btn-danger" title="Delete">✕</button>
+        </div>
+        <h4 class="card-title">{{ task.title }}</h4>
+        {% if task.description %}
+        <p class="card-desc">{{ task.description[:80] }}{% if task.description|length > 80 %}…{% endif %}</p>
+        {% endif %}
+        <div class="card-footer">
+            {% if task.due_date %}
+            <span class="card-due">📅 {{ task.due_date.strftime('%b %d') }}</span>
+            {% endif %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Task Progress — HabitOS{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Task Progress</h1>
+        <p class="page-subtitle">Visualize and track your workflow</p>
+    </div>
+    <button class="btn-primary" onclick="showAddTask()">+ New Task</button>
+</div>
+
+<div class="kanban-board kanban-4col" id="kanbanBoard">
+    <!-- Tasks -->
+    <div class="kanban-col" data-status="todo" ondragover="allowDrop(event)" ondrop="drop(event,'todo')">
+        <div class="kanban-col-header" style="border-bottom-color:#6366f1">
+            <div class="col-title"><span class="col-dot" style="background:#6366f1"></span><h3>Tasks</h3></div>
+            <span class="col-count" id="count-todo">{{ todo|length }}</span>
+        </div>
+        <div class="kanban-cards" id="col-todo">
+            {% for task in todo %}{% set status=task.status %}{% include "partials/task_card.html" %}{% endfor %}
+        </div>
+    </div>
+
+    <!-- Started -->
+    <div class="kanban-col" data-status="started" ondragover="allowDrop(event)" ondrop="drop(event,'started')">
+        <div class="kanban-col-header" style="border-bottom-color:#f59e0b">
+            <div class="col-title"><span class="col-dot" style="background:#f59e0b"></span><h3>Started</h3></div>
+            <span class="col-count" id="count-started">{{ started|length }}</span>
+        </div>
+        <div class="kanban-cards" id="col-started">
+            {% for task in started %}{% set status=task.status %}{% include "partials/task_card.html" %}{% endfor %}
+        </div>
+    </div>
+
+    <!-- In Progress -->
+    <div class="kanban-col" data-status="in_progress" ondragover="allowDrop(event)" ondrop="drop(event,'in_progress')">
+        <div class="kanban-col-header" style="border-bottom-color:#3b82f6">
+            <div class="col-title"><span class="col-dot" style="background:#3b82f6"></span><h3>In Progress</h3></div>
+            <span class="col-count" id="count-in_progress">{{ in_progress|length }}</span>
+        </div>
+        <div class="kanban-cards" id="col-in_progress">
+            {% for task in in_progress %}{% set status=task.status %}{% include "partials/task_card.html" %}{% endfor %}
+        </div>
+    </div>
+
+    <!-- Done -->
+    <div class="kanban-col" data-status="done" ondragover="allowDrop(event)" ondrop="drop(event,'done')">
+        <div class="kanban-col-header" style="border-bottom-color:#22c55e">
+            <div class="col-title"><span class="col-dot" style="background:#22c55e"></span><h3>Done</h3></div>
+            <span class="col-count" id="count-done">{{ done|length }}</span>
+        </div>
+        <div class="kanban-cards" id="col-done">
+            {% for task in done %}{% set status=task.status %}{% include "partials/task_card.html" %}{% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Add Task Modal -->
+<div class="modal-overlay" id="addTaskModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>New Task</h3>
+            <button onclick="closeModal('addTaskModal')">×</button>
+        </div>
+        <div id="addTaskForm">
+            <div class="form-group">
+                <label>Title *</label>
+                <input type="text" id="taskTitle" placeholder="Task title...">
+            </div>
+            <div class="form-group">
+                <label>Description</label>
+                <textarea id="taskDesc" placeholder="Optional details..."></textarea>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Priority</label>
+                    <select id="taskPriority">
+                        <option value="low">Low</option>
+                        <option value="medium" selected>Medium</option>
+                        <option value="high">High</option>
+                        <option value="critical">Critical</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Due Date</label>
+                    <input type="date" id="taskDue">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button onclick="closeModal('addTaskModal')" class="btn-secondary">Cancel</button>
+                <button onclick="addTask()" class="btn-primary">Add Task</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/kanban.js') }}"></script>
+{% endblock %}

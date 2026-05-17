@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}HabitOS — Your Productivity OS{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+{% endblock %}
+{% block auth_content %}
+<div class="auth-page">
+  <div class="auth-bg">
+    <div class="auth-orb auth-orb-1"></div>
+    <div class="auth-orb auth-orb-2"></div>
+    <div class="auth-grid"></div>
+  </div>
+  <div class="auth-container" style="max-width:520px">
+    <div class="auth-brand">
+      <div class="auth-logo">H</div>
+      <h1>HabitOS</h1>
+      <p>The all-in-one productivity OS for developers & students</p>
+    </div>
+    <div class="auth-card" style="text-align:center">
+      <p style="color:var(--text-secondary);margin-bottom:24px;font-size:15px;line-height:1.6">
+        Track habits, solve DSA, manage tasks, and monitor coding profiles — all in one place.
+      </p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="{{ url_for('auth.login') }}" class="auth-btn" style="width:auto;padding:12px 32px">Sign In</a>
+        <a href="{{ url_for('auth.register') }}" class="btn-secondary" style="padding:12px 32px;border-radius:8px;font-size:15px;font-weight:700">Register</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

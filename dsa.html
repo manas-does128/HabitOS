@@ -1,0 +1,314 @@
+{% extends "base.html" %}
+{% block title %}DSA Tracker — HabitOS{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<style>
+    /* ── DSA Sheet Cards ──────────────────────────── */
+    .sheets-wrap {
+        padding: 0 32px 32px;
+    }
+
+    .sheets-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+    }
+
+    .sheets-header h2 {
+        font-size: 13px;
+        font-weight: 700;
+        color: #555;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+    }
+
+    /* URL input area */
+    .sheet-input-row {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .sheet-input-row input[type="url"],
+    .sheet-input-row input[type="text"] {
+        flex: 1;
+        min-width: 200px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        padding: 10px 14px;
+        color: #c0c0c0;
+        font-size: 13px;
+        font-family: 'Syne', sans-serif;
+        outline: none;
+        transition: border-color 0.2s, background 0.2s;
+    }
+
+    .sheet-input-row input:focus {
+        border-color: rgba(255, 255, 255, 0.22);
+        background: rgba(255, 255, 255, 0.06);
+    }
+
+    .sheet-input-row input::placeholder {
+        color: #333;
+    }
+
+    /* Sheet cards grid */
+    .sheets-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 10px;
+    }
+
+    /* Each card is a clickable link */
+    .sheet-card-link {
+        display: block;
+        text-decoration: none;
+        position: relative;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.07);
+        border-radius: 14px;
+        padding: 16px;
+        transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s, background 0.2s;
+        overflow: hidden;
+    }
+
+    .sheet-card-link::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+
+    .sheet-card-link:hover {
+        border-color: rgba(255, 255, 255, 0.16);
+        background: rgba(255, 255, 255, 0.05);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    }
+
+    .sheet-card-link:hover::after {
+        opacity: 1;
+    }
+
+    .sheet-card-link:active {
+        transform: translateY(0);
+    }
+
+    .sheet-card-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .sheet-card-name {
+        font-size: 13px;
+        font-weight: 700;
+        color: #d0d0d0;
+        line-height: 1.3;
+        flex: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .sheet-open-icon {
+        font-size: 11px;
+        color: #333;
+        flex-shrink: 0;
+        margin-top: 2px;
+        transition: color 0.2s;
+    }
+
+    .sheet-card-link:hover .sheet-open-icon {
+        color: #888;
+    }
+
+    .sheet-card-plat {
+        font-size: 10px;
+        font-weight: 700;
+        color: #3a3a3a;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin-top: 6px;
+    }
+
+    /* Delete button (stops link propagation) */
+    .sheet-del-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: none;
+        border: none;
+        color: #1e1e1e;
+        font-size: 12px;
+        cursor: pointer;
+        padding: 3px 6px;
+        border-radius: 5px;
+        transition: color 0.2s, background 0.2s;
+        z-index: 2;
+    }
+
+    .sheet-del-btn:hover {
+        color: #c47474;
+        background: rgba(196, 116, 116, 0.1);
+    }
+
+    /* Empty state */
+    .sheets-empty {
+        text-align: center;
+        padding: 48px 20px;
+        color: #2a2a2a;
+    }
+
+    .sheets-empty p {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    .sheets-empty .empty-hint {
+        margin-top: 10px;
+        font-size: 11px;
+        color: #222;
+        font-family: 'Space Mono', monospace;
+    }
+
+    /* Auto-detect hint */
+    .url-detect-hint {
+        font-size: 11px;
+        color: #3a3a3a;
+        margin-top: 5px;
+        min-height: 16px;
+        transition: color 0.2s;
+    }
+
+    .url-detect-hint.ok {
+        color: #6fcf97;
+    }
+
+    @media (max-width: 768px) {
+        .sheets-wrap {
+            padding: 0 16px 24px;
+        }
+
+        .sheets-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sheet-input-row {
+            flex-direction: column;
+        }
+    }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">DSA Tracker</h1>
+        <p class="page-subtitle">Your DSA study sheets in one place</p>
+    </div>
+</div>
+
+<!-- ── Sheet URL input + cards ── -->
+<div class="sheets-wrap">
+    <div class="sheets-header">
+        <h2>Study Sheets</h2>
+    </div>
+
+    <!-- URL input form -->
+    <form method="POST" action="{{ url_for('dsa.add_sheet') }}" id="sheetForm">
+        <div class="sheet-input-row">
+            <input type="url" name="sheet_url" id="sheetUrl"
+                placeholder="Paste sheet URL — Striver, LeetCode, NeetCode, or any DSA sheet…" required
+                oninput="detectPlatform(this.value)">
+            <input type="text" name="sheet_name" id="sheetName" placeholder="Sheet name (auto-filled)" required
+                style="max-width:220px">
+            <input type="hidden" name="sheet_total" value="0">
+            <input type="hidden" name="sheet_topics" value="">
+            <button type="submit" class="btn-primary">Add Sheet</button>
+        </div>
+        <div class="url-detect-hint" id="detectHint"></div>
+    </form>
+
+    <!-- Sheet cards -->
+    {% if sheets %}
+    <div class="sheets-grid" style="margin-top:16px">
+        {% for sheet in sheets %}
+        {% set plat = 'Striver / TUF' if 'takeuforward' in sheet.url else
+        'LeetCode' if 'leetcode' in sheet.url else
+        'NeetCode' if 'neetcode' in sheet.url else
+        'GeeksForGeeks' if 'geeksforgeeks' in sheet.url else
+        'Codeforces' if 'codeforces' in sheet.url else
+        'CodeChef' if 'codechef' in sheet.url else
+        'Custom Sheet' %}
+        <a href="{{ sheet.url }}" target="_blank" rel="noopener" class="sheet-card-link"
+            onclick="event.stopPropagation()">
+            <button class="sheet-del-btn"
+                onclick="event.preventDefault();event.stopPropagation();deleteSheet('{{ sheet._id }}')"
+                title="Remove sheet">✕</button>
+            <div class="sheet-card-top">
+                <span class="sheet-card-name">{{ sheet.name }}</span>
+                <span class="sheet-open-icon">↗</span>
+            </div>
+            <div class="sheet-card-plat">{{ plat }}</div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="sheets-empty">
+        <p>No sheets added yet.<br>Paste any DSA sheet URL above to get started.</p>
+        <div class="empty-hint">
+            e.g. https://takeuforward.org/strivers-a2z-dsa-course/…
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    const SHEET_PRESETS = {
+        'takeuforward.org': { name: 'Striver A-Z DSA Sheet' },
+        'leetcode.com/studyplan/top-interview-150': { name: 'LeetCode Top 150' },
+        'leetcode.com/studyplan/leetcode-75': { name: 'LeetCode 75' },
+        'leetcode.com/studyplan/programming-skills': { name: 'LeetCode Programming Skills' },
+        'neetcode.io': { name: 'NeetCode Roadmap' },
+        'geeksforgeeks.org': { name: 'GFG DSA Sheet' },
+        'codeforces.com': { name: 'Codeforces Sheet' },
+        'codechef.com': { name: 'CodeChef DSA Sheet' },
+    };
+
+    function detectPlatform(url) {
+        const hint = document.getElementById('detectHint');
+        const nameF = document.getElementById('sheetName');
+        if (!url) { hint.textContent = ''; hint.className = 'url-detect-hint'; return; }
+        for (const [key, preset] of Object.entries(SHEET_PRESETS)) {
+            if (url.includes(key)) {
+                if (!nameF.value) nameF.value = preset.name;
+                hint.textContent = '✓ Detected: ' + key;
+                hint.className = 'url-detect-hint ok';
+                return;
+            }
+        }
+        try {
+            const domain = new URL(url).hostname.replace('www.', '');
+            hint.textContent = 'Platform: ' + domain;
+            hint.className = 'url-detect-hint';
+        } catch { hint.textContent = ''; }
+    }
+
+    function deleteSheet(id) {
+        if (!confirm('Remove this sheet?')) return;
+        fetch(`/dsa/sheets/delete/${id}`, { method: 'POST' })
+            .then(r => r.json())
+            .then(() => location.reload());
+    }
+</script>
+{% endblock %}

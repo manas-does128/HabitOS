@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}Profile — HabitOS{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Profile</h1>
+        <p class="page-subtitle">Your account & productivity overview</p>
+    </div>
+</div>
+
+<div style="padding: 0 32px 32px; display: grid; grid-template-columns: 320px 1fr; gap: 24px;">
+
+  <!-- Profile Card -->
+  <div>
+    <div class="content-card" style="text-align:center; padding: 32px 24px;">
+      <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--purple),var(--blue));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;font-weight:800;margin:0 auto 16px;">
+        {{ user.username[0]|upper }}
+      </div>
+      <h2 style="font-size:20px;font-weight:800;margin-bottom:4px;">{{ user.username }}</h2>
+      <p style="color:var(--text-muted);font-size:14px;margin-bottom:8px;">{{ user.email }}</p>
+      {% if user.bio %}
+      <p style="color:var(--text-secondary);font-size:13px;margin-bottom:16px;">{{ user.bio }}</p>
+      {% endif %}
+      <p style="color:var(--text-muted);font-size:12px;font-family:'Space Mono',monospace;">
+        Joined {{ user.created_at.strftime('%B %Y') if user.created_at else 'Recently' }}
+      </p>
+    </div>
+
+    <div class="content-card" style="margin-top:16px;">
+      <div class="content-card-header"><h3>Update Profile</h3></div>
+      <form method="POST" action="{{ url_for('profile.update') }}">
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea name="bio" placeholder="Tell us about yourself...">{{ user.bio or '' }}</textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div style="display:flex;flex-direction:column;gap:16px;">
+    <div class="stats-grid" style="padding:0;grid-template-columns:repeat(2,1fr);">
+      <div class="stat-card">
+        <div class="stat-icon">◈</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ total_habits }}</span>
+          <span class="stat-label">Active Habits</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ current_streak }}</span>
+          <span class="stat-label">Day Streak</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">◎</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ dsa_count }}</span>
+          <span class="stat-label">DSA Solved</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">▦</div>
+        <div class="stat-info">
+          <span class="stat-value">{{ tasks_done }}</span>
+          <span class="stat-label">Tasks Done</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-card">
+      <div class="content-card-header"><h3>Coding Profiles</h3></div>
+      {% if coding_profiles %}
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        {% for p in coding_profiles %}
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--bg-tertiary);border-radius:8px;">
+          <span style="font-weight:600;font-size:14px;">{{ p.platform }}</span>
+          <span style="font-family:'Space Mono',monospace;font-size:13px;color:var(--accent);">@{{ p.username }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p style="color:var(--text-muted);font-size:13px;">No coding profiles added yet.</p>
+      {% endif %}
+    </div>
+
+    <div class="content-card">
+      <div class="content-card-header"><h3>Account Settings</h3></div>
+      <form method="POST" action="{{ url_for('profile.change_password') }}">
+        <div class="form-group">
+          <label>Current Password</label>
+          <input type="password" name="current_password" placeholder="••••••••">
+        </div>
+        <div class="form-group">
+          <label>New Password</label>
+          <input type="password" name="new_password" placeholder="Min. 6 characters" minlength="6">
+        </div>
+        <div class="form-group">
+          <label>Confirm New Password</label>
+          <input type="password" name="confirm_password" placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-secondary" style="width:100%">Change Password</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
