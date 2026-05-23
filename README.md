@@ -1,7 +1,29 @@
 # HabitOS 🚀
 
 > Your all-in-one productivity operating system for students and developers.
+## 📸 Preview
 
+### Dashboard
+![Dashboard](Dashboard.png)
+
+### Habit Tracker
+![Habits](Habits.png)
+
+### Task Progress
+![Tasks](Tasks.png)
+
+### Analytics
+![Analytics](Analytics.png)
+## 🌐 Live Demo
+
+🔗 Demo: https://habitos-1.onrender.com
+
+---
+
+## 🚧 Project Status
+
+✅ Active Development  
+🚀 New features and improvements ongoing
 ## Features
 
 - **Habit Tracker** — Daily habits with streaks, completion rates & calendar heatmap
