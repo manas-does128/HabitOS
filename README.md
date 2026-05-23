@@ -8,6 +8,18 @@
   <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white"/>
   <img src="https://img.shields.io/badge/Status-Active_Development-success"/>
 </p>
+
+## 📑 Table of Contents
+
+- [📸 Preview](#-preview)
+- [🌐 Live Demo](#-live-demo)
+- [🚀 Features](#features)
+- [🛠 Tech Stack](#tech-stack)
+- [⚙️ Setup](#setup)
+- [📂 Project Structure](#project-structure)
+- [🗄 MongoDB Collections](#mongodb-collections)
+- [🔌 API Endpoints](#api-endpoints)
+- [📜 License](#license)
 ## 📸 Preview
 
 ### Dashboard
