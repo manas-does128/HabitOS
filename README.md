@@ -1,6 +1,13 @@
 # HabitOS 🚀
 
-> Your all-in-one productivity operating system for students and developers.
+> Productivity platform for students and developers to manage habits, DSA progress, coding profiles and tasks in one place.
+
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Flask-Backend-black?logo=flask"/>
+  <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Status-Active_Development-success"/>
+</p>
 ## 📸 Preview
 
 ### Dashboard
