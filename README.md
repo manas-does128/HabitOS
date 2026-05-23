@@ -22,17 +22,17 @@
 - [📜 License](#license)
 ## 📸 Preview
 
-### Dashboard
-![Dashboard](Dashboard.png)
+## 📸 Preview
 
-### Habit Tracker
-![Habits](Habits.png)
+<p align="center">
+  <img src="Dashboard.png" width="48%"/>
+  <img src="Habits.png" width="48%"/>
+</p>
 
-### Task Progress
-![Tasks](Tasks.png)
-
-### Analytics
-![Analytics](Analytics.png)
+<p align="center">
+  <img src="Tasks.png" width="48%"/>
+  <img src="Analytics.png" width="48%"/>
+</p>
 ## 🌐 Live Demo
 
 🔗 Demo: https://habitos-1.onrender.com
