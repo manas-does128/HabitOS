@@ -100,5 +100,17 @@ HabitOS/
 | GET | `/analytics/data` | Analytics data JSON |
 
 ## License
+## 📸 Preview
 
+### Dashboard
+![Dashboard](Dashboard.png)
+
+### Habit Tracker
+![Habits](Habits.png)
+
+### Task Progress
+![Tasks](Tasks.png)
+
+### Analytics
+![Analytics](Analytics.png)
 MIT
